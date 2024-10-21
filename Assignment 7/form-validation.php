@@ -115,7 +115,9 @@ if(NULL != $_POST['state'] ) {
     else if ($state == "swimming") {$swimChecked = "selected";}
     else if ($state == "basketball") {$basketballChecked = "selected";}
     else if ($state == "wrestling") {$wrestling = "selected";}
-
+    else if ($state == "NULL") {
+      $activityError = '<div class="alert alert-danger">Must Select One</div>';
+    }
   }
   else {
     $activityError = '<div class="alert alert-danger">Select an activity</div>';
