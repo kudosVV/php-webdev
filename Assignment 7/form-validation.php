@@ -1,6 +1,7 @@
 
-<?php
 
+<?php
+$optionChecked = NULL;
 $default = NULL; // sticky form default value
 $defaultError = NULL; // supress error messages
 $instrument = NULL; // for the radio button form list
@@ -11,7 +12,11 @@ $name = NULL;
 $nameError = NULL;
 $typeError = NULL;
 $type = NULL;
-
+$footballChecked = NULL;
+$baseballChecked = NULL;
+$basketballChecked = NULL;
+$swimChecked = NULL;
+$wrestling = NULL;
 $drumsChecked = NULL;
 $pianoChecked = NULL;
 $violinChecked = NULL;
@@ -101,16 +106,17 @@ if (isset($_POST['submit'])) {
       $valid = false;
   }
 
-if( NULL != $_POST['state'] ) {
-    $state = $_POST['state'];
-     if ($state == "drums") {$drumsChecked = "checked";}
-    if ($state == "guitar") {$guitarChecked = "checked";}
-    if ($state == "piano") {$pianoChecked = "checked";}
-    if ($state == "violin") {$violinChecked = "checked";}
+if(NULL != $_POST['state'] ) {
+    
+    $state= $_POST['state'];
+     if ($state == "football") {$footballChecked = "selected";}
+
+    else if ($state == "soccer") {$soccerChecked = "selected";}
+    else if ($state == "swimming") {$swimChecked = "selected";}
+    else if ($state == "basketball") {$basketballChecked = "selected";}
+    else if ($state == "wrestling") {$wrestling = "selected";}
+
   }
- 
-
-
   else {
     $activityError = '<div class="alert alert-danger">Select an activity</div>';
     $valid = false;
@@ -137,8 +143,9 @@ echo  <<<EOD
 "Your favorite animals are ";
 $animal1 ." and " .$animal2;
 "<br><br>";
-"Your favorite activity is $state";
+"Your favorite activity is $typex";
 "<br><br>";
+"$basketballchecked";
 EOD;
 
 
@@ -194,12 +201,13 @@ $pageContent = <<<HERE
     	 $activityError
       <p><b>  Select your favorite activity </b> </p>
             <select name="state" >
-           <option name = "typex" value="" >---Please pick an activity---</option>
-            <option name="typex" value ="football" $footballChecked>Football</option>
-            <option name="typex"  value ="basketball" $basketballChecked>Basketball</option>
-            <option name="typex"  value ="soccer" $soccerChecked>Soccer</option>
-            <option name="typex" value ="baseball" $baseballChecked>Baseball</option>
-            <option name="typex"  value ="swimming" $swimChecked>Swimming</option>
+           <option  value="NULL" >---Please pick an activity---</option>
+            <option value ="football" checked $footballChecked >Football</option>
+            <option value ="basketball" $basketballChecked>Basketball</option>
+            <option value ="soccer" $soccerChecked >Soccer</option>
+            <option value ="baseball"$baseballChecked >Baseball</option>
+            <option value ="swimming" $swimChecked >Swimming</option>
+            <option value ="wrestling" $wrestling>Swimming</option>
            
             </select>
 			
@@ -225,7 +233,7 @@ HERE;
 
 if(isset($_POST['submit'])){
 	$pageContent .= "<pre>";
-	
+	$pageContent .= print_r($_POST, TRUE);
 	$pageContent .= "</pre>";
 }
 $pageTitle = "Radio Button Validation";
