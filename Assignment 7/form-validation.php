@@ -103,7 +103,10 @@ if (isset($_POST['submit'])) {
 
 if( NULL != $_POST['state'] ) {
     $state = $_POST['state'];
-    echo "selected";
+     if ($state == "drums") {$drumsChecked = "checked";}
+    if ($state == "guitar") {$guitarChecked = "checked";}
+    if ($state == "piano") {$pianoChecked = "checked";}
+    if ($state == "violin") {$violinChecked = "checked";}
   }
  
 
@@ -115,11 +118,7 @@ if( NULL != $_POST['state'] ) {
 }
 
 
-$selected = <<<Here
 
-echo "selected=selected"
-
-Here;
 
 
 if ($valid) {
@@ -194,13 +193,13 @@ $pageContent = <<<HERE
 
     	 $activityError
       <p><b>  Select your favorite activity </b> </p>
-            <select name="state" onchange="$state">
+            <select name="state" >
            <option name = "typex" value="" >---Please pick an activity---</option>
-            <option name="typex" value ="football" $selected>Football</option>
-            <option name="typex"  value ="basketball" $selected>Basketball</option>
-            <option name="typex"  value ="soccer" $selected>Soccer</option>
-            <option name="typex" value ="baseball" $selected>Baseball</option>
-            <option name="typex"  value ="swimming" $selected>Swimming</option>
+            <option name="typex" value ="football" $footballChecked>Football</option>
+            <option name="typex"  value ="basketball" $basketballChecked>Basketball</option>
+            <option name="typex"  value ="soccer" $soccerChecked>Soccer</option>
+            <option name="typex" value ="baseball" $baseballChecked>Baseball</option>
+            <option name="typex"  value ="swimming" $swimChecked>Swimming</option>
            
             </select>
 			
