@@ -1,25 +1,19 @@
 
 
+
 <?php
-$optionChecked = NULL;
-$default = NULL; // sticky form default value
-$defaultError = NULL; // supress error messages
-$instrument = NULL; // for the radio button form list
-$empty = NULL;
+
+
+
 $email = NULL;
-$activity = null;
+$instrument = NULL;
 $name = NULL;
 $nameError = NULL;
 $typeError = NULL;
 $type = NULL;
-$footballChecked = NULL;
-$baseballChecked = NULL;
-$basketballChecked = NULL;
-$swimChecked = NULL;
-$wrestling = NULL;
-$drumsChecked = NULL;
-$pianoChecked = NULL;
-$violinChecked = NULL;
+$invalid_email_format = NULL;
+$invalid_email = NULL;
+$activity = NULL;
 $activity = NULL;
 $guitarChecked = NULL;
 $countAnimal = NULL;
@@ -40,7 +34,15 @@ $animalArray = array('Dog', 'Cat', 'Hamster', 'Horse', 'Beaver', 'Rabbit');
 foreach ($animalArray as $animalIndex => $animalName){
 	$animalChecked[$animalIndex] = NULL;
 }
-
+$instrumentArray = array("drums", "guitar", "piano", "violin", "bassist");
+foreach($instrumentArray as $instrumentName) {
+  $isntrumentChecked[$instrumentName] = NULL;
+}
+$activityArray = array("soccer", "swimming", "basketball", "baseball", "wrestling");
+foreach($activityArray as $activityName) {
+  $activityChecked[$activityName] = NULL;
+}
+ 
 
 
 
@@ -51,104 +53,100 @@ foreach ($animalArray as $animalIndex => $animalName){
 
 
 if (isset($_POST['submit'])) {
-    $valid = true;
-    $name = htmlspecialchars($_POST['fname']);
-    $nameTrim = trim($name);
-    $nameUppercase = ucfirst($nameTrim);
-   
-    if (empty($name)) {
-        $nameError = '<div class="alert alert-danger">Please provide a valid name.</div>';
+  $valid = true;
+  if (empty($_POST['fname'])) {
+      $invalid_fname = '<div class="alert alert-danger">Please enter a valid first name</div>';
+      $valid = false;
+  } else {
+      $fname = ucfirst(htmlspecialchars(trim($_POST['fname'])));
+  }
+  if (empty($_POST['email'])) {
+    $invalid_email = '<div class="alert alert-danger">Please enter a valid email</div>';
+    $valid = false;
+} else {
+    $email = trim($_POST['email']);
+    // validate email using a regular expression
+    if (!preg_match('/[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}/', $email)) {
+        // returns 1 (true) for match, 0 (false) for no match
+        $invalid_email_format = '<div class="alert alert-danger">Invalid email format</div>';
         $valid = false;
     }
-    $email = htmlspecialchars($_POST['email']);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $emailError = '<div class="alert alert-danger">Invalid format <br> Please use @email .</div>';
-    }
-    if (empty($email)) {
-        
-      $defaultError = '<div class="alert alert-danger">Please enter an email address.</div>';
-      $valid = false;
-    }
-    if (isset($_POST['type'])) {
-      // if set, get the type. No need for htmlspecialchars here, since the user can only select a value we provided.
-      $instrument = $_POST['type'];
-    
-      if ($instrument == "drums") {$drumsChecked = "checked";}
-      if ($instrument == "guitar") {$guitarChecked = "checked";}
-      if ($instrument == "piano") {$pianoChecked = "checked";}
-      if ($instrument == "violin") {$violinChecked = "checked";}
-      
-    }
- else {
-      $typeError = '<div class="alert alert-danger">Please click an instrument.</div>';
-      $valid = false;
-    }
-
-  
-    
-    if (isset($_POST['animal'])){ // check to see if user selected any items
-      $countAnimal = COUNT($_POST['animal']); // count number of items user selected
-      foreach ($_POST['animal'] as $index => $animal) { // step through the form data
-          $selectedAnimal[] = $animal; // create a new array of user selected items
-          if (in_array($animal, $animalArray)) { // check to see if user selceted matches list
-              $animalChecked[$index] = "checked"; // check any items user selected
-          } // end if
-      } // end foreach
-      if ($countAnimal == 2){ // check to see if selected the appropriate number of items
-          $animal1 = $selectedAnimal[0]; // set selected items to individual variables (optional)
-          $animal2 = $selectedAnimal[1]; // set selected items to individual variables (optional)
-      } else { // set error for inaccurate number of items
-          $animalError = '<span class="text-danger">Must Select Only 2</span>';
-          $valid = false;
-      }
-  } else { // set error for no selection
-      $animalError = '<span class="text-danger">Required</span>';
+}
+if (isset($_POST['animal'])){ // check to see if user selected any items
+  $countAnimal = COUNT($_POST['animal']); // count number of items user selected
+  foreach ($_POST['animal'] as $index => $animal) { // step through the form data
+      $selectedAnimal[] = $animal; // create a new array of user selected items
+      if (in_array($animal, $animalArray)) { // check to see if user selceted matches list
+          $animalChecked[$index] = "checked"; // check any items user selected
+      } // end if
+  } // end foreach
+  if ($countAnimal == 2){ // check to see if selected the appropriate number of items
+      $animal1 = $selectedAnimal[0]; // set selected items to individual variables (optional)
+      $animal2 = $selectedAnimal[1]; // set selected items to individual variables (optional)
+  } else { // set error for inaccurate number of items
+      $animalError = '<div class="alert alert-danger">Only select 2 please</div>';
       $valid = false;
   }
-
-if(NULL != $_POST['state'] ) {
-    
-    $state= $_POST['state'];
-     if ($state == "football") {$footballChecked = "selected";}
-
-    else if ($state == "soccer") {$soccerChecked = "selected";}
-    else if ($state == "swimming") {$swimChecked = "selected";}
-    else if ($state == "basketball") {$basketballChecked = "selected";}
-    else if ($state == "wrestling") {$wrestling = "selected";}
-    else if ($state == "NULL") {
-      $activityError = '<div class="alert alert-danger">Must Select One</div>';
-    }
-  }
-  else {
-    $activityError = '<div class="alert alert-danger">Select an activity</div>';
-    $valid = false;
-  }
+} else { // set error for no selection
+  $animalError = '<div class="alert alert-danger">Must select 2 animals</div>';
+  $valid = false;
 }
 
+if(empty($_POST['activity'])) {
+  $activityError = '<div class="alert alert-danger">Select an activity</div>';
+ $valid = false;
+} else {
+    $activity= $_POST['activity'];
+    if (in_array($activity, $activityArray)) { // check to see if user selceted matches list
+     $activityChecked[$activity] = "selected"; 
+ 
+}
+
+}
+
+if (!isset($_POST['instrument'])) {
+  // if set, get the type. No need for htmlspecialchars here, since the user can only select a value we provided.
+
+   $typeError = '<div class="alert alert-danger">Please click an instrument.</div>';
+  $valid = false;
 
 
+ 
+}  else {
+
+
+  $instrument = $_POST['instrument'];
+  if (in_array($instrument, $instrumentArray)) { // check to see if user selceted matches list
+    $instrumentChecked[$instrument] = "checked";
+}
+}
+  
+} 
 
 
 if ($valid) {
 
-echo  <<<EOD
+$pageContent = <<<HERE
 
-"Welcome ";
-"$nameUppercase";
+"Welcome $fname ";
+
 "<br><br>";
 "Your email is "  .$email;
-"<br><br>";
 
+ 
+"<br><br>";
 
 "Your favorite musical instrument is $instrument";
 "<br><br>";
 "Your favorite animals are ";
 $animal1 ." and " .$animal2;
+
 "<br><br>";
-"Your favorite activity is $typex";
-"<br><br>";
-"$basketballchecked";
-EOD;
+"Your favorite activity is $activity";
+
+ 
+HERE;
+
 
 
 } else {
@@ -157,41 +155,46 @@ EOD;
 	foreach ($animalArray as $animalIndex => $animalName) {
 		$animalList .= <<<HERE
 		<input type="checkbox" name="animal[$animalIndex]" id="$animalIndex" value="$animalName" $animalChecked[$animalIndex]>
-		<label for="$animalIndex">$animalName</label> \n
+		<label for="$animalIndex">$animalName</label> \n
 HERE;
 
   }
+  foreach($instrumentArray as $instrumentName) {
+    $instrumentList .= <<<HERE
+  <input type="radio" name="instrument"  value="$instrumentName" $instrumentChecked[$instrumentName]>
+    <label for="$instrument">$instrumentName</label>&emsp;\n
+
+
+HERE;
+  }
+
+  foreach($activityArray as $activityName) {
+    $activityList .= <<<HERE
+    <option value="$activityName" $activityChecked[$activityName]>$activityName</option>\n
+    HERE;
+  }
+
+
     
 
 $pageContent = <<<HERE
 
 <fieldset style= "text-align: center;" >
   <legend> php validation</legend>
-  <form method="post" action="form-validation.php" class="col-lg-6 offset-lg-3">
-    <p>$nameError
-      <label for="fname">Enter your Name: </label>
-      <br>
-      <input type="text" name="fname" id="Name" value="$name">
-    </p>
-    <p>$defaultError $emailError
-      <label for="email">Enter your email: </label>
-      <br>
-      <input type="text" name="email" id="Email" value="$email">
-    </p>
-    <p>
-    </p>
-    
-    <p> <b>Click your favorite instrument: </b><p>
-      <input type="radio" name="type" id="typedrums" value="drums" $drumsChecked>
-      <label for="typecd">Drums</label>
-      <input type="radio" name="type" id="typedguitar" value="guitar" $guitarChecked>
-      <label for="typedl">Guitar</label>
-	  <input type="radio" name="type" id="typepiano" value="piano" $pianoChecked>
-      <label for="typepiano">Piano</label>
-      <input type="radio" name="type" id="typedviolin" value="violin" $violinChecked>
-      <label for="typedviolin">Violin</label>$typeError
-    </p><br>
+  <form action="form-validation.php" method= "post"  class="col-lg-6 offset-lg-3">
+  <div class="form-group">
+			<label for="fname">Enter your name: </label>
+			<input type="text" name="fname" id="fname" value="$fname" class="form-control"> $invalid_fname
+		</div>
+<div class="form-group">
+			<label for="email">Enter your email: </label>
+			<input type="text" name="email" id="email" value="$email" class="form-control"> $invalid_email $invalid_email_format
+		</div>
 
+    <div class="form-group">
+   <label for "instrument">Favorite Instrument - Pick 1 $typeError</label><br>
+   $instrumentList
+</div>
   
 <div class="form-group">
 		<label for="cars">Pick 2 of your favorite animals-- $animalError</label><br>
@@ -199,21 +202,16 @@ $pageContent = <<<HERE
 	</div>
 	
 
-
-    	 $activityError
-      <p><b>  Select your favorite activity </b> </p>
-            <select name="state" >
-           <option  value="NULL" >---Please pick an activity---</option>
-            <option value ="football" checked $footballChecked >Football</option>
-            <option value ="basketball" $basketballChecked>Basketball</option>
-            <option value ="soccer" $soccerChecked >Soccer</option>
-            <option value ="baseball"$baseballChecked >Baseball</option>
-            <option value ="swimming" $swimChecked >Swimming</option>
-            <option value ="wrestling" $wrestling>Swimming</option>
+<div class="form-group">
+    	
+     <label for="activity"> Select your favorite activity  $activityError</label><br>
+           <select name="activity">Favorite Activity" class="form-control">
+           <option value=""&larr; Please Select an Activity &rarr;</option>
+           $activityList
            
             </select>
 			
-			
+		</div>	
 		
         <p><p>
 	
@@ -229,15 +227,11 @@ HERE;
 
 }
 
-
-
-
-
 if(isset($_POST['submit'])){
 	$pageContent .= "<pre>";
 	$pageContent .= print_r($_POST, TRUE);
 	$pageContent .= "</pre>";
 }
-$pageTitle = "Radio Button Validation";
+$pageTitle = "form-validation page";
 include 'template.php';
 ?>
