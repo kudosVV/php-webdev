@@ -178,7 +178,7 @@ HERE;
     $semesterContent .= <<<HERE
     <figure>
     <img src="images/summer.jpeg" alt="Summer Image">
-    <figcaption>..and it's the summer semester.</figcaption>
+    <figcaption>It's the summer semester!</figcaption>
     </figure>
 
 HERE;
@@ -186,7 +186,7 @@ HERE;
     $semesterContent .= <<<HERE
     <figure>
     <img src="images/spring.jpeg" alt="Spring Image">
-    <figcaption>..and it's the spring semester.</figcaption>
+    <figcaption>It's the spring semester!</figcaption>
     </figure>
 
 HERE;
@@ -219,7 +219,7 @@ HERE;
     $diff = ($endofYear - $day2) + $day3;
     $holidayContent .= <<<HERE
     <figure>
-    <img src="images/july4.jpg" alt="Almost July4 Image">
+    <img src="images/july4.jpg" alt="Almost July4 Image">\n
     </figcaption>There are $diff days until next Independence Day!!</figcaption>
     </figure>
  HERE;   
