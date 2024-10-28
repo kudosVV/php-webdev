@@ -18,10 +18,13 @@ $month = date('m');
 $day = date('j');
 $year = date("Y");
 
+// get form
+
+
 if (filter_has_var(INPUT_POST, 'submit')) {
 $ampm = filter_input(INPUT_POST, 'ampm');
 $seconds = filter_input(INPUT_POST, 'seconds');
-$minutes = filter_input(INPUT_POST, 'ampm');
+$minutes = filter_input(INPUT_POST, 'minutes');
 $displayhours = filter_input(INPUT_POST, 'hours');
 $month = filter_input(INPUT_POST, 'month');
 $day = filter_input(INPUT_POST, 'day');
@@ -29,10 +32,9 @@ $year = filter_input(INPUT_POST, 'year');
 $hours = $displayhours;
 }
 
-if($ampm = 'PM') {
+if($ampm == "PM") {
     if($hours < 12) {
         $hours += 12;
-
     }
     $pmChecked = "checked";
 } else {
@@ -42,14 +44,14 @@ if($ampm = 'PM') {
     $amChecked = "checked";
 }
 
-$today = mktime($hours,$minutes,$seconds, $month,$day,$year);
+$today = mktime($hours,$minutes,$seconds,$month,$day,$year);
 
 $timeForm = <<<HERE
 <p>What if we used another time to show the results below?</p>
-<form method = "post">
-<input type="number" name="hours" value="$displayhours" placeholder="HH" size="3" min="0" max="59">
+<form method="POST">
+<input type="number" name="hours" value="$displayhours" placeholder="HH" size="3" min="0" max="12">
 <input type="number" name="minutes" value="$minutes" placeholder="MM" size="3" min="0" max="59">
-<input type="number" name="minutes" value="$seconds" placeholder="MM" size="3" min="0" max="59">
+<input type="number" name="seconds" value="$seconds" placeholder="SS" size="3" min="0" max="59">
 <label><input type="radio" name="ampm" value="AM" $amChecked>&nbsp;AM</label>
 <label><input type="radio" name="ampm" value="PM" $pmChecked>&nbsp;PM</label>
 <input type="submit" name="submit" value="Show Selected">
@@ -73,20 +75,20 @@ HERE;
 }
 
 $dayList = NULL;
-for ($i = 1; $i <= 31; $i++) {
+for ($i=1; $i<=31; $i++) {
     if($i == $day){
         $dayList .= <<<HERE
         <option value="$i" selected>$i</option>\n
 HERE;
     }else{
         $dayList .= <<<HERE
-        <option value="$i>$i</option>\n
+        <option value="$i">$i</option>\n
 HERE;
     }
 }
 
 $yearList = NULL;
-for ($j = date('Y'); $j >=  2000; $j--) {
+for ($j = date('Y'); $j>= 2003;$j--) {
     if($j == $year) {
         $yearList .= <<<HERE
         <option value="$j" selected>$j</option>\n
@@ -168,7 +170,7 @@ if ($month >= $fall) {
     $semesterContent .= <<<HERE
     <figure>
     <img src="images/fall.jpeg" alt="Fall Image">
-    <figcaption>..and it's the fall semester.</figcaption>
+    <figcaption>It's Fall!!.</figcaption>
     </figure>
 
 HERE;
@@ -192,7 +194,7 @@ HERE;
 
 //Determine Holiday
 
-$day1 = date('z', strtotime("July 4"));
+$day1 = date('z', strtotime("July 04"));
 $day2 = date('z', $today);
 
 if ($day1 == $day2) {
@@ -213,7 +215,7 @@ HERE;
 HERE;
 } else {
     $day4 = date('z', strtotime("July 4"));
-    $day3 = date('z', strtotime("July 4 +1 year"));
+    $day3 = date('z', strtotime("July 04 +1 year"));
     $diff = ($day4 - $day2) + $day3;
     $holidayContent .= <<<HERE
     <figure>
@@ -245,7 +247,7 @@ $dateContent
   </div>
   
   $timeForm
-    $dateForm
+ $dateForm
 </div>
 HERE;
 
