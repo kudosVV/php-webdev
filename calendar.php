@@ -214,9 +214,9 @@ HERE;
     </figure>
 HERE;
 } else {
-    $day4 = date('z', strtotime("July 4"));
+    $endofYear = date('z', strtotime("December 31"));
     $day3 = date('z', strtotime("July 04 +1 year"));
-    $diff = ($day4 - $day2) + $day3;
+    $diff = ($endofYear - $day2) + $day3;
     $holidayContent .= <<<HERE
     <figure>
     <img src="images/july4.jpg" alt="Almost July4 Image">
@@ -249,9 +249,9 @@ $dateContent
   $timeForm
  $dateForm
 </div>
+
+
 HERE;
-
-
 
 $postArray = "<pre>";
 $postArray .= print_r($POST, true);
