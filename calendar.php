@@ -250,14 +250,14 @@ $dateContent
  $dateForm
 </div>
 
-
+</div>
 HERE;
 
-$postArray = "<pre>";
-$postArray .= print_r($POST, true);
-$postArray .="</pre>";
-$pageContent .= $postArray;
-$pageContent .= $hours;
+//$postArray = "<pre>";
+//$postArray .= print_r($POST, true);
+//$postArray .="</pre>";
+//$pageContent .= $postArray;
+//$pageContent .= $hours;
 
 $pageTitle = "My Calendar";
 include "template.php";
