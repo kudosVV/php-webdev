@@ -222,6 +222,6 @@ $pageContent = <<<HERE
 </section>\n
 HERE;
 }
-$pageTitle = "register page";
+$pageTitle = "Register page";
 include_once 'template.php';
 ?>
