@@ -83,7 +83,7 @@ $filetype = pathinfo($_FILES['profilePic']['name'],PATHINFO_EXTENSION);
 if ((($filetype == "gif") or ($filetype == "jpg") or ($filetype == "png")) and $_FILES['profilePic']['size'] < 100000) {
 	// check to make sure there is no error on the upload. If so, display the errror 
 	if ($_FILES["profilePic"]["error"] > 0) {
-		$invalid_image .= "Return Code: " . $_FILES["profilePic"]["error"] . "<br>";
+		$invalid_image .= '<div class="alert alert-danger">' . "Return Code: " . $_FILES["profilePic"]["error"] . "<br>" . '</div>';
         $errors = 'error';
 	} else {
 		// display information about the file 
@@ -93,15 +93,15 @@ if ((($filetype == "gif") or ($filetype == "jpg") or ($filetype == "png")) and $
 		//$pageContent .=  "Temp file: " . $_FILES["profilePic"]["tmp_name"] . "<br>";
 		// if the file already exists in the upload directory, give an error
 		if (file_exists("upload/" . $_FILES["profilePic"]["name"])) {
-			$invalid_image = $_FILES["profilePic"]["name"] . " already exists. ";
+			$invalid_image .= '<div class="alert alert-danger">' . $_FILES["profilePic"]["name"] . " already exists. " . '</div>';
             $valid = false;
             $insert_success = false;
             $errors = 'error'; 
 		} else {
 			// move the file to a permanent location
 			move_uploaded_file($_FILES["profilePic"]["tmp_name"],"upload/" . $_FILES["profilePic"]["name"]);
-            $invalid_image .= "Stored in " . "upload/" . $FILES["profilePic"]["name"];
-		$filename = "membership.txt";
+            $invalid_image .= '<div class="alert alert-danger">' . "Stored in " . "upload/" . $FILES["profilePic"]["name"] . '</div>';
+			$filename = "membership.txt";
 // format the form data to be saved to the txt file
         $data_entry = $fullname . "," . $email . "," . $password . "," . $username . "\n";
 // open the txt file ($filename) to append (a) and assign it to a file handle ($fp)
@@ -119,7 +119,7 @@ if ((($filetype == "gif") or ($filetype == "jpg") or ($filetype == "png")) and $
 	 }
 	}
 } else {
-	    $invalid_image .= "Invalid file";
+	    $invalid_image .= '<div class="alert alert-danger">Invalid file</div>';
         $valid = false;
     }
     if (!$conn) {
@@ -222,6 +222,6 @@ $pageContent = <<<HERE
 </section>\n
 HERE;
 }
-$pageTitle = "register page";
+$pageTitle = "Register page";
 include_once 'template.php';
 ?>
