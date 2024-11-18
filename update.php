@@ -139,10 +139,10 @@ if ($_FILES["profilePic"]["error"] > 0) {
                         </div>';
                 $insert_success = true;
             } else {
-                $pageContent .= '<div class="Record not updated!!</div>';
+                $pageContent .= '<div class="alert alert-danger" role="alert">Record not updated!!</div>';
                 }
                } else {
-                echo 'already registered';
+                $pageContent .= '<div class="alert alert-danger" role="alert"You have already updated your details!!</div>';
             }
         } else {
             echo '<p class="error">The Following error(s) occurred';
