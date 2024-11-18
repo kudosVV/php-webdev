@@ -135,7 +135,7 @@ if ($_FILES["profilePic"]["error"] > 0) {
        if (mysqli_affected_rows($conn) == 1) {
        
                 $pageContent .= '<div class="alert alert-success" role="alert">
-                        <strong>Success! </strong>Record Deleted!
+                        <strong>Success! </strong>Record updated!
                         </div>';
                 $insert_success = true;
             } else {
