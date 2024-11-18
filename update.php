@@ -1,10 +1,5 @@
 <?php
 
-
-
-
-$pageContent = null;
-
 if ((isset($_GET['memberID'])) && (is_numeric($_GET['memberID'])) ) {
 
     $memberID = $_GET['memberID'];
@@ -19,7 +14,7 @@ require 'config.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-$firstname = $lastname = $email = NULL;
+
 $insert_success= false;
 $invalid_fname = $invalid_password = $invalid_lname = $invalid_email = $invalid_image = NULL;
 $errors = [];
@@ -85,15 +80,7 @@ else {
 $fullname = $firstname . " " . $lastname;
 $username = strtolower(substr($firstname, 0, 1) . $lastname);
 $username = mysqli_real_escape_string($conn, trim($username));
-$query1="SELECT username FROM `membership` WHERE username='$username'";
-$resulted = mysqli_query($conn, $query1);
-$ranything_found = mysqli_num_rows($resulted);
-if($ranything_found>0){
-$invalid_lname = '<div class="alert alert-danger">Username is already taken.</div>';
-$valid = false;
-} else {
-$valid=true;
-}
+$valid= true;
 $filetype = pathinfo($_FILES['profilePic']['name'],PATHINFO_EXTENSION);
 if ((($filetype == "gif") or ($filetype == "jpg") or ($filetype == "png")) and $_FILES['profilePic']['size'] < 100000) {
 // check to make sure there is no error on the upload. If so, display the errror 
@@ -107,12 +94,7 @@ if ($_FILES["profilePic"]["error"] > 0) {
     //$pageContent .=  "Size: " . ($_FILES["profilePic"]["size"] / 1024) . " Kb<br>";
     //$pageContent .=  "Temp file: " . $_FILES["profilePic"]["tmp_name"] . "<br>";
     // if the file already exists in the upload directory, give an error
-    if (file_exists("upload/" . $_FILES["profilePic"]["name"])) {
-        $invalid_image .= '<div class="alert alert-danger">' . $_FILES["profilePic"]["name"] . " already exists. " . '</div>';
-        $valid = false;
-        $insert_success = false;
-        $errors[] = 'error';
-    } else {
+    
         // move the file to a permanent location
         move_uploaded_file($_FILES["profilePic"]["tmp_name"],"upload/" . $_FILES["profilePic"]["name"]);
         $invalid_image .= "Stored in " . "upload/" . $FILES["profilePic"]["name"];
@@ -134,34 +116,42 @@ if ($_FILES["profilePic"]["error"] > 0) {
     $fp = fclose($fp); // close the file
     $imagePath = "upload/" . $_FILES["profilePic"]["name"];
  }
-}
+
 } else {
     $invalid_image .= '<div class="alert alert-danger">Invalid file</div>';
     $valid = false;
     $errors[] = 'you forgot to enter a valid file';
 }
-if (!$conn) {
-    echo "Failed to connect to MySQL: ".mysqli_connect_error($conn);
-}
 
     if (empty($errors)) {
         
+        $query = "SELECT * FROM `membership` WHERE `memberID` = $memberID;";
+        $result = mysqli_query($conn,$query);
+        if (mysqli_num_rows($result) == 1) {
 
-        $query = "UPDATE users SET firstname = '$firstname', lastname = '$lastname', username = '$username',
-        email = '$email', 'password' = '$password', 'image' = '$image' WHERE `memberID` = $memberID;";
-      $result = mysqli_query($conn, $query);
-      $row_count = mysqli_affected_rows($conn);
-         if($row_count == 1) {
+        $q = "UPDATE `membership` SET `firstname`='$firstname',`lastname`=
+        '$lastname',`username`='$username',`email`='$username',`password`='$password',`image`='$image' WHERE `memberID`= $memberID LIMIT 1";
+        $r = mysqli_query($conn, $q);
+       if (mysqli_affected_rows($conn) == 1) {
        
-                $pageContent .= "<p>Record updated</p>";
+                $pageContent .= '<div class="alert alert-success" role="alert">
+                        <strong>Success! </strong>Record Deleted!
+                        </div>';
                 $insert_success = true;
             } else {
-                $pageContent .= "<p>Update failed</p>";
+                $pageContent .= '<div class="Record not updated!!</div>';
                 }
-    } else {
-        echo 'error';
-    }
-}
+               } else {
+                echo 'already registered';
+            }
+        } else {
+            echo '<p class="error">The Following error(s) occurred';
+            foreach ($errors as $msg) {
+                echo " = $msg<br>\n";
+            }
+            echo '</p><p>Please try again</p>';
+            }
+        }
     
 
 
@@ -170,55 +160,53 @@ if (!$conn) {
     
     if ($row = mysqli_fetch_assoc($result)) {
     // set the database field values to local variables for futher use in the script
-    $memberID = $row['memberID'];
         $firstname = $row['firstname'];
         $lastname = $row['lastname'];
         $username = $row['username'];
         $email = $row['email'];
         $password = $row['password'];
         $image = $row['image'];
+    }
 
-$pageContent .= <<<HERE
-<section class="container">
+    if (mysqli_num_rows($result) == 1) {
+     $row = mysqli_fetch_array($result, MYSQLI_NUM);
+$pageContent .= 
+'<section class="container">
 	<p>Update your details</p>
 	<form action="update.php" enctype="multipart/form-data" method="post">
 		<div class="form-group">
 			<label for="firstname">First Name:</label>
-			<input type="text" name="firstname" id="firstname" value="$firstname" class="form-control"> $invalid_fname
+			<input type="text" name="firstname" id="firstname" value="' . $firstname .'" class="form-control">' . $invalid_fname .'
 		</div>
 		<div class="form-group">
 			<label for="lastname">Last Name:</label>
-			<input type="text" name="lastname" id="lastname" value="$lastname" class="form-control"> $invalid_lname
+			<input type="text" name="lastname" id="lastname" value="' . $lastname .'" class="form-control">' . $invalid_lname .'
 		</div>
 		<div class="form-group">
 			<label for="email">E-Mail:</label>
-			<input type="text" name="email" id="email" value="$email" class="form-control"> $invalid_email $invalid_email_format
+			<input type="text" name="email" id="email" value="' . $email .'" class="form-control">' . $invalid_email . $invalid_email_format . '
 		</div>
         <div class="form-group">
         <label for="password">Password: </label>
-        <input type="password" name="password" id="password" value ='' class="form-control">$invalid_password
+        <input type="password" name="password" id="password" value ="' . $password .'" class="form-control"> ' .$invalid_password .'
         </div>
           <div class="form-group">
         <label for="verifypassword">Verify Password: </label>
-        <input type="password" name="verifypassword" id="verifypassword" value ='' class="form-control">$invalid_password_verify $invalid_password_key
+        <input type="password" name="verifypassword" id="verifypassword" value="" class="form-control"> ' . $invalid_password_verify . $invalid_password_key . '
         </div>
 		<p>Please select an image for your profile.</p>
 		<div class="form-group">
 			<input type="hidden" name="MAX_FILE_SIZE" value="100000">
-			<label for="profilePic">File to Upload: $image</label> $invalid_image
+			<label for="profilePic">File to Upload:' . $image . '</label>' . $invalid_image . '
 			<input type="file" name="profilePic" id="profilePic" class="form-control">
 		</div>
 		<div class="form-group">
-        
          <input type="hidden" name="memberID" value="' . $memberID . '">
-		<input type="submit" name="submit" value="Submit Profile" class="btn btn-primary">
-
-        
+		<input type="submit" name="Update" value="Update Profile" class="btn btn-primary">
 		</div>
 	</form>
-</section>\n
-<br><br><br>
-HERE;
+</section>
+<br><br><br>';
     
     } else {
         echo 'error';
