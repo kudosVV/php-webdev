@@ -214,6 +214,15 @@ $pageContent .=
      
     
 mysqli_close($conn);
+
+if ($insert_success) {
+    session_start();
+    $_SESSION['message'] = '<div class="alert alert-success" role="alert">
+                        <strong>Success! </strong>Record Updated!! 
+                        </div>';  
+    header( "Location: https://mywebtraining.net/webdev/LouisCK/php/profile.php" );
+       die();
+     }
 $pageTitle = "Profile page";
 include_once 'template.php';
 

@@ -59,7 +59,7 @@ if (isset($_POST['submit'])) {
         
          $passwordVerify = trim($_POST['verifypassword']);
     }
-         if(strcmp($_POST['password'], $_POST['verifypassword']) == 0) {  
+      if(strcmp($_POST['password'], $_POST['verifypassword']) == 0) {  
             $password = $_POST['password']; 
             $password = mysqli_real_escape_string($conn, trim($_POST['password'])); 
            $valid = true;
@@ -103,6 +103,7 @@ if ((($filetype == "gif") or ($filetype == "jpg") or ($filetype == "png")) and $
 			move_uploaded_file($_FILES["profilePic"]["tmp_name"],"upload/" . $_FILES["profilePic"]["name"]);
             $invalid_image .= "Stored in " . "upload/" . $FILES["profilePic"]["name"];
 			$filename = "membership.txt";
+            $valid=true;
 // format the form data to be saved to the txt file
         $data_entry = $fullname . "," . $email . "," . $password . "," . $username . "\n";
 // open the txt file ($filename) to append (a) and assign it to a file handle ($fp)
@@ -177,13 +178,13 @@ if ($insert_success) {
         <th>image</th>
     </tr><br><br>
     <tr class="table-secondary">
-        <th style="text-align: center;">
+        <th>
         <a href="delete-verify.php?memberID=$memberID">
-        <input type="button" name="delete"  value="Delete" class="btn btn-primary" method="post">
+        <input type="button" name="delete"  value="Delete" class="btn btn-primary btn-md center-block method="post">
         </a>
 
          <a href="update.php?memberID=$memberID">
-        <input type="button" name="update"  value="Update" class="btn btn-primary" method="post">
+        <input type="button" name="update"  value="Update" class="btn btn-primary btn-md center-block" method="post">
         </a>
 
 
@@ -204,7 +205,7 @@ if ($insert_success) {
 $pageContent = <<<HERE
 <section class="container">
 	<p>Please register if you are a new member</p>
-	<form action="profile.php" enctype="multipart/form-data" method="post">
+	<form action="" enctype="multipart/form-data" method="post">
 		<div class="form-group">
 			<label for="firstname">First Name:</label>
 			<input type="text" name="firstname" id="firstname" value="$firstname" class="form-control"> $invalid_fname
@@ -242,6 +243,11 @@ $pageContent = <<<HERE
 </section>\n
 <br><br><br>
 HERE;
+}
+session_start();
+if (isset($_SESSION['message'])) {
+    echo $_SESSION['message'];
+    unset($_SESSION['message']);
 }
 $pageTitle = "Profile page";
 include_once 'template.php';

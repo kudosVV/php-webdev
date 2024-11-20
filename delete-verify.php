@@ -1,9 +1,4 @@
 <?php
-
-
-include_once 'config.php';
-$pageTitle = 'Delete Page';
-
 if ((isset($_GET['memberID'])) && (is_numeric($_GET['memberID'])) ) {
 
     $memberID = $_GET['memberID'];
@@ -15,10 +10,11 @@ if ((isset($_GET['memberID'])) && (is_numeric($_GET['memberID'])) ) {
 }
 
 
+include_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST['sure'] == 'Yes') {
-
+       $insert_success=false; 
         $query = "SELECT * FROM `membership` WHERE `memberID` = $memberID;";
         $result = mysqli_query($conn,$query);
         if (!$result) {
@@ -33,10 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $password = $row['password'];
             $image = $row['image'];
         }
-
-    
-
-
 $query = "DELETE FROM `membership` WHERE `memberID` = $memberID LIMIT 1";
 $result = mysqli_query($conn, $query);
  $row_count = mysqli_affected_rows($conn);
@@ -44,13 +36,19 @@ $result = mysqli_query($conn, $query);
 
                         $Path = $image;
                         if (unlink($Path)) {    
-                            echo "image file unlinked";
-                        } else {
-                            echo "image file still there";    
-                        }
-    $pageContent .=    '<div class="alert alert-success" role="alert">
+                            $pageContent .= '<div class="alert alert-success" role="alert">
+                            <strong>Success! </strong>Image deleted!
+                            </div>';
+                        $pageContent .=    '<div class="alert alert-success" role="alert">
                         <strong>Success! </strong>Record Deleted! 
-                        </div>';
+                        </div>';    
+                        } else {
+                            $pageContent .= '<div class="alert alert-danger" role="alert">
+                            <strong>Success! </strong>Image still there!
+                            </div>';    
+                        }
+                        $insert_success = true;
+                            
     $pageContent .=
                         '<div class="container" style="text-align:center;">
                         <h3>Do you wish to submit the form again?</h3>
@@ -59,8 +57,11 @@ $result = mysqli_query($conn, $query);
                         
                         </div>';
                         
+                       
+    
+
     } else {
-        $pageContent .=  "<p>Delete failed</p>";
+        $pageContent .=  '<div class="alert alert-danger" role="alert"<strong>Fail</strong>Record not deleted</div>'; 
         $pageContent .=  '<p>' . mysqli_error($conn) . '<br>Query: ' . $query . '</p>'; //Debug
     }
 } else {
@@ -113,6 +114,17 @@ $result = mysqli_query($conn, $query);
 }
  }
 mysqli_close($conn);
-include_once 'template.php';
 
+if ($insert_success) {
+    session_start();
+    $_SESSION['message'] = '<div class="alert alert-success" role="alert">
+                        <strong>Success! </strong>Record Deleted! 
+                        </div>';  
+    header( "Location: https://mywebtraining.net/webdev/LouisCK/php/profile.php" );
+       die();
+     }
+
+
+$pageTitle = 'Delete Page';
+include_once 'template.php';
 ?>
