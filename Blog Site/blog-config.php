@@ -2,17 +2,7 @@
 session_start();
 $conn = mysqli_connect("localhost", "sherd_LouisCK", "5DFHmJSF34kf3", "sherd_LouisCK");
 date_default_timezone_set('America/Chicago');
-function debug_data() {
-    echo '<pre>SESSION is ';
-    echo print_r($_SESSION);
-    echo 'COOKIE is ';
-    echo print_r($_COOKIE);
-    echo 'POST is ';
-    echo print_r($_POST);
-    echo 'GET is ';
-    echo print_r($_GET);
-    echo '</pre>';
-}
+
 
 function blogPost($conn, $postID) {
 	$stmt = $conn->stmt_init();
@@ -26,7 +16,7 @@ function blogPost($conn, $postID) {
 	$postData = array($postTitle, $postContent);
 	return $postData;
 }
-debug_data();
+
 // this function returns a multidimensional array of blog post IDs and titles
 function blogPosts($conn) {
 	$stmt = $conn->stmt_init();
