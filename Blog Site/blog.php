@@ -21,7 +21,7 @@ if (filter_has_var(INPUT_GET, 'postID')) {
 	// assemble the HTML
 	$pageContent = "<h2>$postTitle</h2>
 	$postContent\n
-	<p><a href='new-blog.php'>Back to Blog</a></p>";
+	<p><a href='blog.php'>Back to Blog</a></p>";
 
 } else { // load the default blog list
 
@@ -38,7 +38,7 @@ if (filter_has_var(INPUT_GET, 'postID')) {
 HERE;      
 			} else { // build the blog post list
 			$postList .= <<<HERE
-			<li><a href="new-blog.php?postID=$postID">$postTitle</a></li>
+			<li><a href="blog.php?postID=$postID">$postTitle</a></li>
 HERE;
 			}
 		}
