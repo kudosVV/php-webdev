@@ -3,6 +3,29 @@ session_start();
 $conn = mysqli_connect("localhost", "sherd_LouisCK", "5DFHmJSF34kf3", "sherd_LouisCK");
 date_default_timezone_set('America/Chicago');
 
+function auth_user() {
+    if(isset($_SESSION['memberID'])) {
+        return TRUE;
+        $msg = '<div class="alert alert-success" role="alert">
+        <strong>Success! </strong>Welcome back! 
+        </div>';  
+    } else {
+        return FALSE;
+    }
+}
+function debug_data() {
+    echo '<pre>SESSION is ';
+    echo print_r($_SESSION);
+    echo 'COOKIE is ';
+    echo print_r($_COOKIE);
+    echo 'POST is ';
+    echo print_r($_POST);
+    echo 'GET is ';
+    echo print_r($_GET);
+    echo '</pre>';
+}
+
+debug_data();
 
 function blogPost($conn, $postID) {
 	$stmt = $conn->stmt_init();
