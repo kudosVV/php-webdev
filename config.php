@@ -13,19 +13,7 @@ function auth_user() {
         return FALSE;
     }
 }
-function debug_data() {
-    echo '<pre>SESSION is ';
-    echo print_r($_SESSION);
-    echo 'COOKIE is ';
-    echo print_r($_COOKIE);
-    echo 'POST is ';
-    echo print_r($_POST);
-    echo 'GET is ';
-    echo print_r($_GET);
-    echo '</pre>';
-}
 
-debug_data();
 
 function blogPost($conn, $postID) {
 	$stmt = $conn->stmt_init();

@@ -1,5 +1,6 @@
 <?php
 
+
 if ((isset($_GET['memberID'])) && (is_numeric($_GET['memberID'])) ) {
 
     $memberID = $_GET['memberID'];
@@ -9,6 +10,7 @@ if ((isset($_GET['memberID'])) && (is_numeric($_GET['memberID'])) ) {
     $pageContent .=  '<p class="error">No member ID has been passed.</p>';
     exit();
 }
+
 require 'config.php';
 $valid = false;
 
@@ -66,8 +68,11 @@ $pageContent .= <<<HERE
 		<input type="submit" name="update" value="Update Profile" class="btn btn-primary">
 
            <a href="delete-verify.php?memberID=$memberID">
-        <input type="button" name="update"  value="Update" class="btn btn-primary btn-md center-block" method="post">
+        
+           <input type="button" name="delete"  value="Delete" class="btn btn-primary btn-md center-block" method="post">
         </a>
+        <a href="login.php">Login</a>
+        <a href="logout.php">LogOut</a>
 		</div>
 	</form>
 </section>
@@ -256,6 +261,7 @@ if (isset($image)) {
                         $email = $row['email'];
                         $password = $row['password'];
                         $image = $row['image'];   
+                       
 $pageContent .= <<<HERE
 <h2 style="text-align:center">User Profile #$memberID</h2>
 <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -268,13 +274,15 @@ $pageContent .= <<<HERE
   <h1>$firstname $lastname</h1>
   <p>Username: $username</p>
   <p>Email: $email</p>
-  <p>password: $password</p>
+  <p>password: (Hash Form) </p>
+  <p>$password</p>
   <p>
   <form action="" method="post">
   <input type="hidden" name="memberID" value="$memberID" class="btn btn-primary">
   <input type="submit" name="Edit" value="Edit Profile" class="btn btn-primary"/>
-  <a href="delete-verify.php">
-  <input type="submit" name="Delete" value="Delete" class="btn btn-secondary"/></a>
+  <a href="delete-verify.php">Delete</a>
+  <a href="login.php">Login</a>
+        <a href="logout.php">LogOut</a>
   </form>
   </p>
 </div>
@@ -289,6 +297,7 @@ if ($insert_success) {
     $_SESSION['message'] = '<div class="alert alert-success" role="alert">
                         <strong>Success! </strong>Record Updated!! 
                         </div>'; 
+
        die();
      }
 $pageTitle = "Profile page";

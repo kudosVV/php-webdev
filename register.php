@@ -136,11 +136,11 @@ if ((($filetype == "gif") or ($filetype == "jpg") or ($filetype == "png")) and $
 			// retrieve the last record inserted id
 			$memberID = mysqli_insert_id($conn);
 			$insert_success = TRUE;
-			echo '<div class="alert alert-danger">Record inserted!!</div>';
+			$pageContent .= '<div class="alert alert-success">Record inserted!!</div>';
 
 		} else {
             $valid = false;
-			echo '<div class="alert alert-danger">record failed!!</div>';
+			$pageContent .= '<div class="alert alert-danger">record failed!!</div>';
            
 			}
 		}
@@ -182,6 +182,7 @@ if ($insert_success) {
         <th>$image</th>
     </tr>
     </table>
+    <a href="https://mywebtraining.net/webdev/LouisCK/php/profile.php?memberID=$memberID">Click to view profile</a>
     HERE;
     }
     } else {
@@ -220,6 +221,7 @@ $pageContent = <<<HERE
 		</div>
 	</form>
 </section>\n
+<br><br><br>
 HERE;
 }
 $pageTitle = "Register page";

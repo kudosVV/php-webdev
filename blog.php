@@ -1,6 +1,6 @@
 <?php
 // load config.php to connect to the database
-include_once 'blog-config.php';
+include_once 'config.php';
 
 // initialize variables
 $pageContent = NULL;
