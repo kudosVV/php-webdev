@@ -9,21 +9,73 @@ if ((isset($_GET['memberID'])) && (is_numeric($_GET['memberID'])) ) {
     $pageContent .=  '<p class="error">No member ID has been passed.</p>';
     exit();
 }
-
 require 'config.php';
-$pk = $m = $i = $mx = false;
 $valid = false;
 
-if ($pk || $m) {
-    $banner = '<div class="alert alert-success" role="alert">
-    Success! Record Updated!
-  </div>';
-} elseif ($mx || $i ){
-    $banner = '<div class="alert alert-success" role="alert">
-    Success! Record Updated!
-  </div>';
-}
-if (isset($_POST['update'])) {
+
+
+if(isset($_POST['Edit'])) {
+    $query = "SELECT * FROM `membership` WHERE `memberID` = $memberID;";
+    $result = mysqli_query($conn,$query);
+    if (!$result) {
+    die(mysqli_error($conn));
+               }
+               if ($row = mysqli_fetch_assoc($result)) {
+                   // set the database field values to local variables for futher use in the script
+                   $memberID = $row['memberID'];
+                   $firstname = $row['firstname'];
+                   $lastname = $row['lastname'];
+                   $username = $row['username'];
+                   $email = $row['email'];
+                   $password = $row['password'];
+                   $imageName = $row['image'];  
+
+$pageContent .= <<<HERE
+'<section class="container">
+	<p>Update your details</p>
+	<form action="" enctype="multipart/form-data" method="post">
+		<div class="form-group">
+			<label for="firstname">First Name:</label>
+			<input type="text" name="firstname" id="firstname" value="$firstname" class="form-control">$invalid_fname 
+		</div>
+		<div class="form-group">
+			<label for="lastname">Last Name:</label>
+			<input type="text" name="lastname" id="lastname" value="$lastname" class="form-control">$invalid_lname 
+		</div>
+		<div class="form-group">
+			<label for="email">E-Mail:</label>
+			<input type="text" name="email" id="email" value="$email" class="form-control">$invalid_email $invalid_email_format
+		</div>
+        <div class="form-group">
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" value ="$password" class="form-control"> $invalid_password
+        </div>
+          <div class="form-group">
+        <label for="verifypassword">Verify Password: </label>
+        <input type="password" name="verifypassword" id="verifypassword" value="" class="form-control">$invalid_password_verify $invalid_password_key
+        </div>
+		<p>Please select an image for your profile.</p>
+		<div class="form-group">
+			<input type="hidden" name="MAX_FILE_SIZE" value="$imageName">
+			<label for="profilePic">File to Upload: </label>$invalid_image
+			<input type="file" name="profilePic" id="profilePic" class="form-control">
+		</div>
+		<div class="form-group">
+         <input type="hidden" name="memberID" value="$memberID">
+         
+		<input type="submit" name="update" value="Update Profile" class="btn btn-primary">
+
+           <a href="delete-verify.php?memberID=$memberID">
+        <input type="button" name="update"  value="Update" class="btn btn-primary btn-md center-block" method="post">
+        </a>
+		</div>
+	</form>
+</section>
+<br><br><br>';
+HERE;  
+               }
+            }
+elseif (isset($_POST['update'])) {
 $insert_success= false;
 $invalid_fname = $invalid_password = $invalid_lname = $invalid_email = $invalid_image = NULL;
 $errors = [];
@@ -53,7 +105,7 @@ $valid = true;
         $r = @mysqli_query($conn, $sql);
         if (mysqli_affected_rows($conn) == 1) {
                  $pk = true; 
-                 $lastname = '<div class="alert alert-success">Name has been updated!</div>';
+                 $pageContent .= '<div class="alert alert-success">Name has been updated!</div>';
              }
              else {
                 $pk = false;
@@ -79,7 +131,7 @@ if ($valid) {
     $r = @mysqli_query($conn, $sql);
     if (mysqli_affected_rows($conn) == 1) {
              $mx = true;
-             $invalid_email = '<div class="alert alert-success">Email has been updated!!</div>';
+             $pageContent .= '<div class="alert alert-success">Email has been updated!!</div>';
              
          }  else {
             $mx = false;
@@ -116,7 +168,7 @@ if ($valid) {
     $r = @mysqli_query($conn, $sql);
     if (mysqli_affected_rows($conn) == 1) {
              $m = true;
-             $invalid_password = '<div class="alert alert-success">Password Updated!</div>';
+             $pageContent .= '<div class="alert alert-success">Password Updated!</div>';
              
          }  else {
             $m = false;
@@ -181,76 +233,64 @@ if (isset($image)) {
        $r = @mysqli_query($conn, $sql);
        if (mysqli_affected_rows($conn) == 1) {
                 $i = true;
-                $pageContent = '<div class="alert alert-success">Image updated!!</div>';
+                $pageContent .= '<div class="alert alert-success">Image updated!!</div>';
                 
             } else {
                 $i = false;
                 }
             }
-        } 
-    
-    
+        }
 
-
-    $query = "SELECT * FROM `membership` WHERE `memberID` = $memberID;";
-    $result = mysqli_query($conn,$query);
     
-    if ($row = mysqli_fetch_assoc($result)) {
-    // set the database field values to local variables for futher use in the script
-        $firstname = $row['firstname'];
-        $lastname = $row['lastname'];
-        $username = $row['username'];
-        $email = $row['email'];
-        $password = $row['password'];
-        $image = $row['image'];
-    }
-
-    if (mysqli_num_rows($result) == 1) {
-     $row = mysqli_fetch_array($result, MYSQLI_NUM);
-$pageContent .= 
-'<section class="container">
-	<p>Update your details</p>
-	<form action="" enctype="multipart/form-data" method="post">
-		<div class="form-group">
-			<label for="firstname">First Name:</label>
-			<input type="text" name="firstname" id="firstname" value="' . $firstname .'" class="form-control">' . $invalid_fname .'
-		</div>
-		<div class="form-group">
-			<label for="lastname">Last Name:</label>
-			<input type="text" name="lastname" id="lastname" value="' . $lastname .'" class="form-control">' . $invalid_lname .'
-		</div>
-		<div class="form-group">
-			<label for="email">E-Mail:</label>
-			<input type="text" name="email" id="email" value="' . $email .'" class="form-control">' . $invalid_email . $invalid_email_format . '
-		</div>
-        <div class="form-group">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" value ="' . $password .'" class="form-control"> ' .$invalid_password .'
-        </div>
-          <div class="form-group">
-        <label for="verifypassword">Verify Password: </label>
-        <input type="password" name="verifypassword" id="verifypassword" value="' . $password . '" class="form-control"> ' . $invalid_password_verify . $invalid_password_key . '
-        </div>
-		<p>Please select an image for your profile.</p>
-		<div class="form-group">
-			<input type="hidden" name="MAX_FILE_SIZE" value="10000">
-			<label for="profilePic">File to Upload: </label>' . $invalid_image . '
-			<input type="file" name="profilePic" id="profilePic" class="form-control">
-		</div>
-		<div class="form-group">
-        <input type="hidden" name="memberID" value="' . $image . '">
-         <input type="hidden" name="memberID" value="' . $memberID . '">
-		<input type="submit" name="update" value="Update Profile" class="btn btn-primary">
-		</div>
-	</form>
-</section>
-<br><br><br>';
-    
-    }
-     
-    
+        $query = "SELECT * FROM `membership` WHERE `memberID` = $memberID;";
+         $result = mysqli_query($conn,$query);
+         if (!$result) {
+         die(mysqli_error($conn));
+                    }
+                    if ($row = mysqli_fetch_assoc($result)) {
+                        // set the database field values to local variables for futher use in the script
+                        $memberID = $row['memberID'];
+                        $firstname = $row['firstname'];
+                        $lastname = $row['lastname'];
+                        $username = $row['username'];
+                        $email = $row['email'];
+                        $password = $row['password'];
+                        $image = $row['image'];   
+$pageContent .= <<<HERE
+<h2 style="text-align:center">User Profile #$memberID</h2>
+<div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;">
+  <img src="upload/$image" style="width:100%">
+  
+  <h1>$firstname $lastname</h1>
+  <p>Username: $username</p>
+  <p>Email: $email</p>
+  <p>password: $password</p>
+  <p>
+  <form action="" method="post">
+  <input type="hidden" name="memberID" value="$memberID" class="btn btn-primary">
+  <input type="submit" name="Edit" value="Edit Profile" class="btn btn-primary"/>
+  <a href="delete-verify.php">
+  <input type="submit" name="Delete" value="Delete" class="btn btn-secondary"/></a>
+  </form>
+  </p>
+</div>
+<br><br><br>
+HERE;
+ }
+      
 mysqli_close($conn);
+
+if ($insert_success) {
+    session_start();
+    $_SESSION['message'] = '<div class="alert alert-success" role="alert">
+                        <strong>Success! </strong>Record Updated!! 
+                        </div>'; 
+       die();
+     }
 $pageTitle = "Profile page";
 include_once 'template.php';
-
 ?>
