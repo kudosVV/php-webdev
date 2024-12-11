@@ -1,109 +1,66 @@
-
-<!DOCTYPE html>
-<html>
-<head>
 <?php
 $shipping = 2.99;
-
+$downloadPrice = 9.99;
+$cdPrice = 12.99;
 $heading = "Cost by Quantity";
+$pageContent = NULL;
+$orderList = NULL;
+include 'functions.php';
 
-$name = $_POST['fname'];
-$radiobutton = $_POST['flexRadioDefault'];
-$albumChosen = $_POST['albumPicked'];
-$quantity = $_POST['num'];
-if (!empty($_REQUEST['fname'])) {
-    $name = $_REQUEST['fname'];
+
+if(empty($_POST['userName'])) {
+    $userName = "Guest";
+    $userNameError = "<p class='error'>Username required</p>";
 } else {
-    $name = NULL;
+$userName = $_POST['userName'];
+$userNameError = NULL;
 }
-
-if (!empty($_REQUEST['flexRadioDefault'])) {
-    $radiobutton = $_REQUEST['flexRadioDefault'];
+if(empty($_POST['quantity'])) {
+$quantity = NULL;
+$userQuantityError = "<p class='error'>Quantity required</p>";
+} else { 
+    $quantity = $_POST['quantity'];
+    $userQuantityError = NULL;
+}
+if(!isset($_POST['media'])) {
+    $media = NULL;
+    $userMediaError = "<p class='error'>Media required</p>";
 } else {
-    $name = NULL;
+    $media = $_POST['media'];
+    $userMediaError = NULL;
 }
 
-if (!empty($_REQUEST['albumPicked'])) {
-    $albumChosen = $_REQUEST['albumPicked'];
-} else {
-    $name = NULL;
-}
-if (!empty($_REQUEST['num'])) {
-    $quantity = $_REQUEST['num'];
-} else {
-    $name = NULL;
-}
-
-
-$page_title = 'Welcome, to the form results page';
-include('template.php');
-
-
-
-include('functions.php');
-
-
-
-
-?>
-</head>
-
-<?php
-
-
-echo '<center>';
-
-
-echo 'Hello, '.$name;
-echo '<br> <br>';
-echo 'Welcome to the store!!';
-
-echo '<br> <br>';
-
-echo 'You chose the album ' .$albumChosen;
-
-echo '<br> <br>';
-
-echo 'You chose ' .$quantity. ' albums';
-
-
-echo '<br> <br>';
-
-echo 'You have picked in the form of ' .$radiobutton;
-
-echo '<br> <br>';
-
-
-
-
-echo 'the final cost is $';
-
-if ($radiobutton == "CD") {
-    $price = 12.99;
-   echo priceCalc($price, $quantity) + 2.99;
-}
-    elseif($radiobutton == "Download") {
-        $price = 9.99;
-        echo priceCalc($price, $quantity);
-        
+if($media == 'cd') {
+$heading .= " - CDs";
+for($i = 1; $i <= $quantity; $i++) {
+    $cost = priceCalc($cdPrice, $i) + $shipping;
+    $orderList .= "<p>The price for $i CDs is \$ $cost</p>";
     
 }
+}
+if($media == 'download') {
+    $heading .= " - Downloads";
+    $i = 1;
+    while ($i <= $quantity) {
+        $cost = priceCalc($downloadPrice, $i);
+        $orderList .= "<p>The price for $i Downloads is \$ $cost</p>";
+        $i++;
+    }
+}
+
+$pageContent = <<< HERE
+    <section>
+    <h2>$heading</h2>
+    <article>
+        <h3>Order for $username</h3>
+        $orderList
+        $usernameError
+        $userQuantityError
+        $userMediaError
+    </article>
+    </section>
 
 
+HERE;
 
-
-
-
-
-echo '<br> <br>';
-echo '<h3>' .$heading;
-echo '</h3>';
-echo 'CD cost $12.99 each and $2.99 for shipping';
-echo '<br> <br>';
-echo 'Download is 9.99 per';
-echo '<br> <br>';
-echo 'There are discounts based on the quantity you buy ';
-echo '<br> <br>';
-echo 'The more you buy, the better the discount ';
-echo '</center>';
-?>
+include 'template.php';
