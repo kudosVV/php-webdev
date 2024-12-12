@@ -60,10 +60,14 @@ name="userName" id="userName" value="">
 </p>
 </form>
 </fieldset>
-<h3>Artists and Albums sorted by name.</h3>
+<h3>Albums sorted alphabetically</h3>
+<div class="p-3 mb-2 bg-light text-dark">
 $albumsKeySortList
-<h3>Artists and Albums sorted by artist.</h3>
+</div>
+<h3>Albums sorted by artist alphabetically.</h3>
+<div class="p-3 mb-2 bg-light text-dark">
 $albumsValueSortList
+</div>
 </section>
 HERE;
 include_once 'template.php';
