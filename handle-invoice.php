@@ -10,21 +10,21 @@ include 'functions.php';
 
 if(empty($_POST['userName'])) {
     $userName = "Guest";
-    $userNameError = "<p class='error'>Username required</p>";
+    $userNameError = '<div class="p-3 mb-2 bg-danger text-white">Username required</div>';
 } else {
 $userName = $_POST['userName'];
 $userNameError = NULL;
 }
 if(empty($_POST['quantity'])) {
 $quantity = NULL;
-$userQuantityError = "<p class='error'>Quantity required</p>";
+$userQuantityError = '<div class="p-3 mb-2 bg-danger text-white">Quantity required</div>';
 } else { 
     $quantity = $_POST['quantity'];
     $userQuantityError = NULL;
 }
 if(!isset($_POST['media'])) {
     $media = NULL;
-    $userMediaError = "<p class='error'>Media required</p>";
+    $userMediaError = '<div class="p-3 mb-2 bg-danger text-white">Media required</div>';
 } else {
     $media = $_POST['media'];
     $userMediaError = NULL;
@@ -59,7 +59,7 @@ $pageContent = <<< HERE
         $userMediaError
     </article>
     </section>
-
+<a href="invoice.php"><button type="button">Back</button></a>
 
 HERE;
 
