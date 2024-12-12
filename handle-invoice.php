@@ -59,7 +59,7 @@ $pageContent = <<< HERE
         $userMediaError
     </article>
     </section>
-<a href="invoice.php"><button type="button">Back</button></a>
+<a href="invoice.php"><button type="button" class="btn btn-primary">Back</button></a>
 
 HERE;
 
